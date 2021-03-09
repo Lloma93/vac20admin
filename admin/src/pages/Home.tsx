@@ -10,7 +10,7 @@ import { useHistory } from "react-router-dom";
 function Home() {
 
     const handleLogout = () => {
-        console.log('clicou desloga')
+       // console.log('clicou desloga')
         localStorage.removeItem('@token')
     }
 

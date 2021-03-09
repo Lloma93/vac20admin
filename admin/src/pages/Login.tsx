@@ -35,12 +35,12 @@ function Login() {
 
 
     var handleSubmit = () => {
-        console.log('logon', logon)
+        // console.log('logon', logon)
 
         api.post('login', logon).then(response => {
-            console.log(response)
-            console.log(response?.data?.token)
-            console.log(response.status)
+            // console.log(response)
+            // console.log(response?.data?.token)
+            // console.log(response.status)
 
             if (response.status === 200 && response.data.token !== '' &&
                 response.data.token !== undefined && response) {

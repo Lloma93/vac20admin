@@ -19,12 +19,12 @@ function Login() {
 
     var handleChangeLogin = (event: { target: { value: any; }; }) => {
         setLogon({ username: event.target.value, password: logon.password });
-        if (checkImput(logon.password)&& checkImput(logon.password)) {setDisabledButton(false)}
+        if (checkImput(logon.password) && checkImput(logon.password)) { setDisabledButton(false) }
     }
 
     var handleChangePassword = (event: { target: { value: any; }; }) => {
         setLogon({ username: logon.username, password: event.target.value });
-        if (checkImput(logon.password)&& checkImput(logon.password)) {setDisabledButton(false)}
+        if (checkImput(logon.password) && checkImput(logon.password)) { setDisabledButton(false) }
     }
 
 
@@ -66,20 +66,29 @@ function Login() {
     return (
         <div id="login-page">
             <div className="content-wrapper">
-                <h1> eVac20 - Admin </h1>
-                <img src={login01} alt="img" />
-                <label>Login:</label>
-                <input type="text" id="login" onChange={handleChangeLogin}></input>
-                <label>Senha:</label>
-                <input type="password" id="senha" onChange={handleChangePassword}></input>
-                <button className="button-password" onClick={handleSubmit} disabled={disabledButton}>Logar</button>
-               <div className="mt">                   
-                <p>Esqueceu seu login? < p />
-                    <Link to="/help" className="recovery-password">
-                        Recuperar a senha
+                <div className="divPequenas">
+
+               
+                <div className="mobilelogo">
+
+                    <h1> eVac20 - Admin </h1>
+                    <img src={login01} alt="img" />
+                </div>
+                <div className="mobile">
+                    <label>Login:</label>
+                    <input type="text" id="login" onChange={handleChangeLogin}></input>
+                    <label>Senha:</label>
+                    <input type="password" id="senha" onChange={handleChangePassword}></input>
+                    <button className="button-password" onClick={handleSubmit} disabled={disabledButton}>Logar</button>
+                    <div >
+                        <p>Esqueceu seu login? < p />
+                            <Link to="/help" className="recovery-password">
+                                Recuperar a senha
                 </Link>
-                </p>
-               </div>
+                        </p>
+                    </div>
+                </div>
+                </div>
 
             </div>
         </div>

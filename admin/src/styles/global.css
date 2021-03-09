@@ -9,6 +9,11 @@ body {
     background: #ebf2f5;
 }
 
+body .dark {
+    color: rgb(17, 17, 17);
+    background: #ebf2f5;
+}
+
 body,
 input,
 button,

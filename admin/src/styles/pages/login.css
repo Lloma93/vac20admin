@@ -25,6 +25,10 @@
     margin: 6px;
 }
 
+#login-page .content-wrapper p {
+    margin: 6px;
+}
+
 #login-page .content-wrapper input {
     margin: 6px;
     width: 260px;
@@ -40,6 +44,10 @@
 
 #login-page .content-wrapper .recovery-password {
     position: absolute;
+}
+
+.mt {
+    margin-top: 12px;
 }
 
 #login-page .content-wrapper .button-password {

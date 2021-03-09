@@ -1,17 +1,24 @@
 import React, { useEffect, useState } from 'react';
+import Snackbar from '@material-ui/core/Snackbar';
+import MuiAlert from '@material-ui/lab/Alert';
+import TextField from '@material-ui/core/TextField';
 import '../styles/pages/login.css';
 import login01 from '../assets/images/login01.svg'
 import { Link } from 'react-router-dom'
 import api from '../services/api'
 import { useHistory } from "react-router-dom";
 
+function Alert(props: any) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 function Login() {
-
     const history = useHistory();
-
-    const [callAPI, setCallAPI] = useState('')
     const [logon, setLogon] = useState({ username: '', password: '' })
     const [disabledButton, setDisabledButton] = useState(true)
+    const [open, setOpen] = useState(false);
+    const [error, setError] = useState('');
+    const [messageError, setMessageError] = useState('');
 
     var checkImput = (value: any) => {
         if (value !== undefined && value !== '') return true
@@ -27,20 +34,16 @@ function Login() {
         if (checkImput(logon.password) && checkImput(logon.password)) { setDisabledButton(false) }
     }
 
-
-
-    // validar antes de enviar
-    // desabilitar btn se algum item estiver vazio 
-    // alerta ao tirar o foco e não preencher o form
-
+    var handleClose = () => {
+        if (error !== '' || error !== undefined) {
+            setError('')
+        }
+        setOpen(false);
+    };
 
     var handleSubmit = () => {
-        // console.log('logon', logon)
 
         api.post('login', logon).then(response => {
-            // console.log(response)
-            // console.log(response?.data?.token)
-            // console.log(response.status)
 
             if (response.status === 200 && response.data.token !== '' &&
                 response.data.token !== undefined && response) {
@@ -54,13 +57,10 @@ function Login() {
 
                 history.push('home');
             } else {
-                // tratar erros
-                // erro da API
+                setOpen(true);
+                setMessageError(response.data.message)
             }
         })
-
-
-
     }
 
     return (
@@ -68,29 +68,33 @@ function Login() {
             <div className="content-wrapper">
                 <div className="divPequenas">
 
-               
-                <div className="mobilelogo">
 
-                    <h1> eVac20 - Admin </h1>
-                    <img src={login01} alt="img" />
-                </div>
-                <div className="mobile">
-                    <label>Login:</label>
-                    <input type="text" id="login" onChange={handleChangeLogin}></input>
-                    <label>Senha:</label>
-                    <input type="password" id="senha" onChange={handleChangePassword}></input>
-                    <button className="button-password" onClick={handleSubmit} disabled={disabledButton}>Logar</button>
-                    <div >
-                        <p>Esqueceu seu login? < p />
-                            <Link to="/help" className="recovery-password">
-                                Recuperar a senha
-                </Link>
-                        </p>
+                    <div className="mobilelogo">
+
+                        <h1> eVac20 - Admin </h1>
+                        <img src={login01} alt="img" />
                     </div>
-                </div>
+                    <div className="mobile">
+                        <label>Login:</label>
+                        <input type="text" id="login" onChange={handleChangeLogin} ></input>
+                        <label>Senha:</label>
+                        <input type="password" id="senha" onChange={handleChangePassword}></input>
+                        <button className="button-password" onClick={handleSubmit} disabled={disabledButton}>Logar</button>
+                        <div >
+                            <p>Esqueceu seu login? < p />
+                                <Link to="/help" className="recovery-password">
+                                    Recuperar a senha</Link>
+                            </p>
+                        </div>
+                    </div>
                 </div>
 
             </div>
+            <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity="error">
+                    {messageError}
+                </Alert>
+            </Snackbar>
         </div>
     );
 }

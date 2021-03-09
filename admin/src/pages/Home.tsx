@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import Moment from 'react-moment';
 import axios, { AxiosError } from 'axios'
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
 import { Link } from 'react-router-dom';
 import '../styles/pages/sidebar-home.css';
 import '../styles/pages/home.css';
-import ListApprove from './ListApprove';
+import SimpleModal from './ListApprove';
 import { useHistory } from "react-router-dom";
 import api from '../services/api';
 import MaterialTable from 'material-table';
@@ -15,11 +16,27 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import Modal from '@material-ui/core/Modal';
 
 
 function Alert(props: any) {
     return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
+
+function rand() {
+    return Math.round(Math.random() * 20) - 10;
+  }
+  
+  function getModalStyle() {
+    const top = 50 + rand();
+    const left = 50 + rand();
+  
+    return {
+      top: `${top}%`,
+      left: `${left}%`,
+      transform: `translate(-${top}%, -${left}%)`,
+    };
+  }
 
 function Home() {
     const useStyles = makeStyles((theme: Theme) =>
@@ -36,6 +53,16 @@ function Home() {
             table: {
                 minWidth: 650,
             },
+            modal: {
+                position: 'absolute',
+                width: 800,
+                height: 600,
+                backgroundColor: theme.palette.background.paper,
+                border: 'none',
+                borderRadius: '8px',
+                boxShadow: theme.shadows[2],
+                padding: theme.spacing(2, 4, 3),
+            },
         }),
     );
 
@@ -48,6 +75,9 @@ function Home() {
     const [token, setToken] = useState(localStorage.getItem('@token'));
     const [listVac, setListVac] = useState([]);
     const history = useHistory();
+    const [modalStyle] = React.useState(getModalStyle);
+    const [openModal, setOpenModal] = useState(false);
+    const [img, setImg] = useState('')
 
     const handleClose = () => {
         if (error !== '' || error !== undefined) {
@@ -56,6 +86,11 @@ function Home() {
         }
         setOpen(false);
     };
+
+    const handleCloseM = () => {
+        setImg('')
+        setOpenModal(false)
+    }
     const handleCloseS = () => {
         if (success !== '' || success !== undefined) {
             setSuccess('')
@@ -71,16 +106,16 @@ function Home() {
 
 
 
-    const callAPI = (item:string, cpf:any, id:any, api:string) => {
+    const callAPI = (item: string, cpf: any, id: any, api: string) => {
         axios({
             method: 'post',
             url: `https://vac-20.herokuapp.com/vacApprove/${api}`,
-            data: {cpf: cpf, id: id},
+            data: { cpf: cpf, id: id },
             headers: {
                 authorization: token
             }
         }).then(response => {
-            
+
             console.log(response)
             setMessageSuccess(response.data.message)
             setOpenS(true)
@@ -101,13 +136,18 @@ function Home() {
         })
     }
 
-    const handleAprovar = (id:any, cpf:any) => {
+    const handleAprovar = (cpf: any, id: any) => {
         console.log('clicou aprovar')
         callAPI('aprovar', cpf, id, 'accept')
     }
-    const handleReprovar = (cpf:any, id:any) => {
+    const handleReprovar = (cpf: any, id: any) => {
         console.log('clicou reprovar')
         callAPI('reprovar', cpf, id, 'deny')
+    }
+    const hanfleOpenImage = (data: any) => {
+        console.log(data)
+        setImg(data)
+        setOpenModal(true)
     }
 
     const lista = () => {
@@ -137,7 +177,7 @@ function Home() {
 
             }
         })
-    } 
+    }
     useEffect(() => {
         lista();
     }, [])
@@ -181,18 +221,24 @@ function Home() {
                         <TableBody>
 
                             {
-                                listVac.map((element: { _id: any, id:any, cpf: string, description: string, insertedAt: string, image: string, shots: number }) => (
+                                listVac.map((element: { _id: any, id: any, cpf: string, description: string, insertedAt: string, image: string, shots: number }) => (
                                     <>
-                                        {/* <p className="dark">
-                                        <p>{element.cpf} </p>
-                                        <p>{element.description} </p>
-                                    </p> */}
                                         <TableRow key={element._id}>
                                             <TableCell align="right">{element.cpf}.***.***.-**</TableCell>
                                             <TableCell align="right">{element.description}</TableCell>
-                                            <TableCell align="right">{element.insertedAt}</TableCell>
-                                            <TableCell align="right">ampliar imagem</TableCell>
-                                            {/* <TableCell align="right">{element.image}</TableCell> */}
+                                            <TableCell align="right">
+                                                <Moment parse="YYYY-MM-DD HH:mm">
+                                                    {element.insertedAt}
+                                                </Moment>
+                                                </TableCell>
+                                            <TableCell align="right" onClick={() => hanfleOpenImage(element.image)}>
+                                                <div className="box_icon">
+                                                    clique na img para amplicar
+                                                    <img src={`data:image/png;base64,${element.image}`} />
+                                                    <div id="container"></div>
+                                                </div>
+                                            </TableCell>
+
                                             <TableCell align="right">{element.shots}</TableCell>
                                             <TableCell align="right" onClick={() => handleAprovar(element.cpf, element.id)}>
                                                 <div className="box_icon">
@@ -216,9 +262,6 @@ function Home() {
 
                 </div>
 
-                {/* <Link to="/home" className="approve">
-                    <span className="material-icons md-32">check_circle</span>
-                </Link> */}
                 <div className="flex-end">
 
                     <Link to="" className="logout" onClick={handleLogout}>
@@ -241,6 +284,16 @@ function Home() {
                     {messageSuccess}
                 </Alert>
             </Snackbar>
+
+
+            <Modal
+                aria-labelledby="simple-modal-title"
+                aria-describedby="simple-modal-description"
+                open={openModal}
+                onClose={handleCloseM}
+            >
+                <img width="400px" height="400px" src={`data:image/png;base64,${img}`} />
+            </Modal>
         </>
     );
 }

@@ -76,6 +76,14 @@
     transition: background-color 0.2s;
 }
 
+.logout {
+    color: white;
+}
+
+.logout:hover {
+    color: rgb(250, 29, 121);
+}
+
 #page-map .logout:hover {
     background: #17d6eb;
 }

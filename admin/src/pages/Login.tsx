@@ -71,7 +71,7 @@ function Login() {
 
                     <div className="mobilelogo">
 
-                        <h1> eVac20 - Admin </h1>
+                        <h1> eVac - Admin </h1>
                         <img src={login01} alt="img" />
                     </div>
                     <div className="mobile">

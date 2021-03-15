@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Moment from 'react-moment';
+import moment from 'moment';
 import axios, { AxiosError } from 'axios'
 import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert from '@material-ui/lab/Alert';
@@ -224,12 +225,10 @@ function Home() {
                                 listVac.map((element: { _id: any, id: any, cpf: string, description: string, insertedAt: string, image: string, shots: number }) => (
                                     <>
                                         <TableRow key={element._id}>
-                                            <TableCell align="right">{element.cpf}.***.***.-**</TableCell>
+                                            <TableCell align="right">{element.cpf}.********</TableCell>
                                             <TableCell align="right">{element.description}</TableCell>
                                             <TableCell align="right">
-                                                <Moment parse="YYYY-MM-DD HH:mm">
-                                                    {element.insertedAt}
-                                                </Moment>
+                                                {moment(element.insertedAt).format('L')}
                                                 </TableCell>
                                             <TableCell align="right" onClick={() => hanfleOpenImage(element.image)}>
                                                 <div className="box_icon">

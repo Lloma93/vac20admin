@@ -14,7 +14,7 @@ function TalkToUsHelper() {
             <p /><p />
             <h2 className="bold"> <span className="material-icons md-24">face</span> Entre em contato conosco</h2>
             
-            <p> SAC eVac20@sac-Vac20.com.br</p>
+            <p> SAC eVac@sac-Vac20.com.br</p>
             <p> e-mail: meAjuda@vac20.com.br</p>
             <p> SP capital (11) 1234-5678</p>
             <p> Demais localidades (0800) 9874-6321</p>
